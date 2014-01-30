@@ -17,4 +17,4 @@ var multiples = function(exclusiveUpperBound) {
 }
 console.log(multiples(1000))
 
-// 233168
+// 233168 
