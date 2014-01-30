@@ -18,5 +18,3 @@ def fibs(max=4000000)
 end
 
 p fibs()
-
-# => 4613732
