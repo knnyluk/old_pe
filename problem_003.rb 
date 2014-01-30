@@ -1,0 +1,27 @@
+# Problem 3: Largest prime factor
+# The prime factors of 13195 are 5, 7, 13 and 29.
+# What is the largest prime factor of the number 600851475143 ?
+
+def prime?(num)
+	(2...num).each {|divisor| return false if num % divisor == 0}
+	true
+end
+def all_factors(maximum=600851475143)
+	divisor = 2
+	factors = []
+	until divisor >= maximum 
+		until maximum % divisor != 0
+			maximum /= divisor
+			factors << divisor
+		end
+		divisor += 1
+	end
+	factors << maximum
+	factors.reverse
+end	
+def largest_prime(factors)
+	factors.each do |factor|
+		return factor if prime?(factor)
+	end	
+end
+p largest_prime(all_factors)
