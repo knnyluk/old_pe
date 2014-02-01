@@ -1,0 +1,34 @@
+def prime_factors(num)
+	divisor = 2
+	factors = []
+	until divisor >= num 
+		while num % divisor == 0
+			num /= divisor
+			factors << divisor
+		end
+		divisor += 1
+	end
+	factors << num
+end
+def count_all_factors(prime_factors)
+	prime_factor_count = prime_factors.count
+	prime_combinations = []
+	(1...prime_factor_count).each do |num|
+		combos = prime_factors.combination(num).to_a
+		combos.each do |combo|
+			prime_combinations << combo
+		end
+	end
+	prime_combinations.map {|combo| combo.reduce(:*)}.uniq.count + 2
+end
+def first_w_divisors(num_of_divisors)
+	total = 1
+	next_natural_num = 2
+	loop do
+		current_div_count = count_all_factors(prime_factors(total))
+		return total if current_div_count >= num_of_divisors
+		total += next_natural_num
+		next_natural_num += 1
+	end
+end
+p first_w_divisors(500)
