@@ -1,0 +1,14 @@
+# def all_factors(maximum=600851475143)
+# 	divisor = 2
+# 	factors = []
+# 	until divisor >= maximum 
+# 		while maximum % divisor == 0
+# 			maximum /= divisor
+# 			factors << divisor
+# 		end
+# 		divisor += 1
+# 	end
+# 	factors << maximum
+# 	factors.reverse
+# end	
+# p all_factors(1000)
