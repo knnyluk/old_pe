@@ -1,0 +1,54 @@
+# Problem 17: Number letter counts
+# If the numbers 1 to 5 are written out in words: one, two, three, four, five, then there are 3 + 3 + 5 + 4 + 4 = 19 letters used in total.
+# If all the numbers from 1 to 1000 (one thousand) inclusive were written out in words, how many letters would be used?
+# NOTE: Do not count spaces or hyphens. For example, 342 (three hundred and forty-two) contains 23 letters and 115 (one hundred and fifteen) contains 20 letters. The use of "and" when writing out numbers is in compliance with British usage.
+
+ONES_WORDS = ['','one','two','three','four','five','six','seven','eight','nine']
+TEENS_WORDS = ['ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen']
+TENS_WORDS = ['','','twenty','thirty','fourty','fifty','sixty','seventy','eighty','ninty']
+HUNDREDS_WORDS = ['','onehundred','twohundred','threehundred','fourhundred','fivehundred','sixhundred','sevenhundred','eighthundred','ninehundred']
+THOUSANDS = ['', 'onethousand']
+EVEN_HUNDREDS_NUM_ARR = (1..9).to_a.map {|num| num * 100}
+
+def num_to_digits(num)
+	num.to_s.chars.map(&:to_i)
+end
+def num_to_words(num)
+	case 
+		when (0..9).include?(num)
+			ones_digit = num_to_digits(num)[0]
+			ONES_WORDS[ones_digit]
+		when (10..19).include?(num)
+			ones_digit = num_to_digits(num)[1]
+			TEENS_WORDS[ones_digit]
+		when (20..99).include?(num)
+			digits = num_to_digits(num)
+			ones_digit = digits[1]
+			tens_digit = digits[0]
+			TENS_WORDS[tens_digit] + ONES_WORDS[ones_digit]
+		when EVEN_HUNDREDS_NUM_ARR.include?(num)
+			hundreds_digit = num_to_digits(num)[0]
+			HUNDREDS_WORDS[hundreds_digit]
+		when num == 1000
+			'onethousand'
+		when num > 100
+			digits = num_to_digits(num)
+			hundreds_digit = digits[0]
+			intermediate_result = HUNDREDS_WORDS[hundreds_digit] + 'and'
+			tens_n_ones = digits.last(2).join.to_i
+			intermediate_result + num_to_words(tens_n_ones)
+	end
+end
+def list_text_nums(start_num=1, end_num)
+	text_numbers = []
+	(start_num..end_num).each do |num|
+		text_numbers << num_to_words(num)
+	end
+	text_numbers
+end
+def word_to_char_count(words)
+	words.map {|word_num| word_num.length}.reduce(:+)
+end	
+
+word_nums = list_text_nums(1000)
+p word_to_char_count(word_nums)

@@ -1,21 +1,34 @@
-def gen_collatz(start_num, result=[])
-	result << start_num
+# Problem 14: Longest Collatz sequence
+# The following iterative sequence is defined for the set of positive integers:
+#   n → n/2 (n is even)
+#   n → 3n + 1 (n is odd)
+# Using the rule above and starting with 13, we generate the following sequence:
+#   13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+# It can be seen that this sequence (starting at 13 and finishing at 1) contains 10 terms. Although it has not been proved yet (Collatz Problem), it is thought that all starting numbers finish at 1.
+# Which starting number, under one million, produces the longest chain?
+# NOTE: Once the chain starts the terms are allowed to go above one million.
+
+# 15.9 sec
+# calculating sequence lengths outright, instead of saving entire sequences shortened tota run time by about 18%
+def collatz_length(start_num, current_length=0)
 	if start_num.even?
+		current_length += 1
 		next_start_num = start_num / 2
-		gen_collatz(next_start_num, result)
+		collatz_length(next_start_num, current_length)
 	elsif start_num == 1
-		result
+		current_length
 	else
+		current_length += 1
 		next_start_num = start_num * 3 + 1
-		gen_collatz(next_start_num, result)
+		collatz_length(next_start_num, current_length)			
 	end
 end
-collatz_proc = Proc.new { |start_num| gen_collatz(start_num) }
-def longest_seq(max_inital_num, seq_generator)
+collatz_length_proc = Proc.new {|start_num| collatz_length(start_num)}
+def longest_seq(test_start= 3, max_inital_num, seq_length_calc_proc)
 	longest_length = 0
 	current_champ = "noone yet"
-	(3..max_inital_num).each do |seq_starter|
-		current_length = (seq_generator.call(seq_starter)).count
+	(test_start..max_inital_num).each do |seq_starter|
+		current_length = seq_length_calc_proc.call(seq_starter)
 		if current_length > longest_length
 			current_champ = seq_starter 
 			longest_length = current_length
@@ -23,4 +36,33 @@ def longest_seq(max_inital_num, seq_generator)
 	end
 	current_champ
 end
-p longest_seq(1000000, collatz_proc)
+p longest_seq(1000000, collatz_length_proc)
+
+#19.5 secs
+
+# def gen_collatz(start_num, result=[])
+# 	result << start_num
+# 	if start_num.even?
+# 		next_start_num = start_num / 2
+# 		gen_collatz(next_start_num, result)
+# 	elsif start_num == 1
+# 		result
+# 	else
+# 		next_start_num = start_num * 3 + 1
+# 		gen_collatz(next_start_num, result)
+# 	end
+# end
+# collatz_proc = Proc.new { |start_num| gen_collatz(start_num) }
+# def longest_seq(max_inital_num, seq_generator)
+# 	longest_length = 0
+# 	current_champ = "noone yet"
+# 	(3..max_inital_num).each do |seq_starter|
+# 		current_length = (seq_generator.call(seq_starter)).count
+# 		if current_length > longest_length
+# 			current_champ = seq_starter 
+# 			longest_length = current_length
+# 		end
+# 	end
+# 	current_champ
+# end
+# p longest_seq(1000000, collatz_proc)
